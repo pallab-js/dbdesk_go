@@ -35,11 +35,12 @@
 </script>
 
 <aside class="sidebar">
-  <nav>
+  <nav aria-label="Primary">
     {#each nav as item (item.id)}
       <button
         class="nav-item"
         class:active={$view === item.id}
+        aria-current={$view === item.id ? "page" : undefined}
         on:click={() => view.set(item.id)}
         title={item.label}
       >

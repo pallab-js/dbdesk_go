@@ -16,9 +16,9 @@
 
 {#if open}
   <div class="backdrop" role="presentation" on:mousedown|self={onClose}>
-    <div class="dialog" role="dialog" aria-modal="true" aria-label={title} style="max-width:{width}px">
+    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title" style="max-width:{width}px">
       <header>
-        <h2>{title}</h2>
+        <h2 id="modal-title">{title}</h2>
         <button class="btn ghost icon sm" aria-label="Close dialog" on:click={onClose}>✕</button>
       </header>
       <div class="content">

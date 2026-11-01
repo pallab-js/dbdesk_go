@@ -75,7 +75,7 @@
     <div class="row">
       <div class="search">
         <Search size={12} />
-        <input type="search" placeholder="Filter statements" bind:value={filter} spellcheck="false" />
+        <input type="search" aria-label="Filter statements" placeholder="Filter statements" bind:value={filter} spellcheck="false" />
       </div>
       <button class="btn sm icon" title="Reload history" aria-label="Reload history" disabled={loading} on:click={load}>
         <RefreshCw size={13} />
@@ -107,11 +107,11 @@
     <div class="panel list-panel">
       {#each filtered as h (h.id)}
         <div class="entry" class:open={expanded === h.id}>
-          <button class="entry-row" on:click={() => (expanded = expanded === h.id ? null : h.id)}>
+          <button class="entry-row" aria-expanded={expanded === h.id} on:click={() => (expanded = expanded === h.id ? null : h.id)}>
             <span class="caret">
               {#if expanded === h.id}<ChevronDown size={13} />{:else}<ChevronRight size={13} />{/if}
             </span>
-            <span class="status" class:bad={!h.success} title={h.success ? 'succeeded' : 'failed'}></span>
+            <span class="status" class:bad={!h.success} role="img" aria-label={h.success ? "succeeded" : "failed"} title={h.success ? "succeeded" : "failed"}></span>
             <span class="kind">{h.kind || 'sql'}</span>
             <span class="sql mono truncate">{h.sql}</span>
             <span class="dur muted">{formatDuration(h.durationMs)}</span>

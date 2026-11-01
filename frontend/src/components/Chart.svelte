@@ -6,7 +6,7 @@
 </script>
 
 <div class="chart" style="height:{height}px">
-  <canvas use:chart={config}></canvas>
+  <canvas use:chart={config} aria-label="Chart"></canvas>
 </div>
 
 <style>

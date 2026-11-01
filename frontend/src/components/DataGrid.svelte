@@ -34,7 +34,7 @@
             style="text-align:{(c.type || '').match(/INT|REAL|NUM|FLOA|DOUB/) ? 'right' : 'left'}"
             aria-sort={sortColumn === c.name ? (sortDir === 'desc' ? 'descending' : 'ascending') : 'none'}
             on:click={() => headerClick(c.name)}
-            on:keydown={(e) => e.key === 'Enter' && headerClick(c.name)}
+            on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), headerClick(c.name))}
             tabindex={sortable ? 0 : -1}
           >
             <span class="th-inner" style="justify-content:{sortColumn === c.name && sortDir === 'desc' ? 'flex-end' : 'flex-start'}">

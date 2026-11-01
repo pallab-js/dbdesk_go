@@ -43,7 +43,7 @@
     <button
       class="btn ghost icon sm"
       title="Refresh schema and stats"
-      aria-label="Refresh"
+      aria-label="Refresh schema and stats"
       disabled={!canRefresh || refreshing}
       on:click={onRefresh}
     >

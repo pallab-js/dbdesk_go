@@ -151,7 +151,7 @@
 <div class="page">
   <header class="toolbar">
     <div class="left">
-      <select class="table-select" value={$activeTable} on:change={(e) => openTable((e.target as HTMLSelectElement).value)}>
+      <select class="table-select" aria-label="Select table" value={$activeTable} on:change={(e) => openTable((e.target as HTMLSelectElement).value)}>
         {#each tables as t (t.name)}
           <option value={t.name}>{t.name}{t.type === 'view' ? ' (view)' : ''}</option>
         {/each}
@@ -180,7 +180,7 @@
           <ChevronRight size={15} />
         </button>
       </div>
-      <select value={String(pageSize)} on:change={changeSize} title="Rows per page">
+      <select value={String(pageSize)} aria-label="Rows per page" on:change={changeSize} title="Rows per page">
         {#each pageSizes as n (n)}
           <option value={String(n)}>{n} / page</option>
         {/each}

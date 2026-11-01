@@ -106,7 +106,7 @@
             </div>
             <div class="segmented">
               {#each themes as t (t.id)}
-                <button class:active={$themeMode === t.id} on:click={() => setTheme(t.id)}>
+                <button class:active={$themeMode === t.id} aria-pressed={$themeMode === t.id} on:click={() => setTheme(t.id)}>
                   <svelte:component this={t.icon} size={12} />
                   {t.label}
                 </button>
