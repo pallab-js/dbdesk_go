@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-BIN      := build/bin/dbdesk
+BIN      := build/bin/dbdesk.app/Contents/MacOS/dbdesk
 TAGS     := webkit2_41
 WAILS    ?= $(shell command -v wails 2>/dev/null || echo $(HOME)/go/bin/wails)
 DESTDIR  ?=
