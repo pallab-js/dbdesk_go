@@ -32,6 +32,9 @@ Thumbs.db
 # Logs
 *.log
 
+# Graphify (generated knowledge graph outputs)
+graphify-out/
+
 # Wails
 frontend/wailsjs/go/
 frontend/wailsjs/runtime/
