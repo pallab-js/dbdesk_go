@@ -7,8 +7,39 @@ on:
     branches: [main]
 
 jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.x'
+
+      - name: Go tests
+        run: go test ./...
+
+  check-frontend:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Frontend install and check
+        run: |
+          npm ci --prefix frontend
+          npm run check --prefix frontend
+
   build:
     runs-on: ubuntu-24.04
+    needs: [test, check-frontend]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,13 +65,10 @@ jobs:
       - name: Add Go bin to PATH
         run: echo "$HOME/go/bin" >> $GITHUB_PATH
 
-      - name: Go tests
-        run: go test ./...
-
-      - name: Frontend install and check
+      - name: Build frontend
         run: |
           npm ci --prefix frontend
-          npm run check --prefix frontend
+          npm run build --prefix frontend
 
       - name: Build
         run: wails build -tags webkit2_41
