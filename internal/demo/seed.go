@@ -17,12 +17,12 @@ const seed = 20261101
 var (
 	firstNames = []string{"Avery", "Jordan", "Riley", "Morgan", "Casey", "Quinn", "Rowan", "Sage", "Drew", "Emerson", "Finley", "Harper", "Jamie", "Kai", "Lane", "Marlow", "Noel", "Parker", "Reese", "Skyler"}
 	lastNames  = []string{"Adams", "Baker", "Chen", "Diaz", "Evans", "Fischer", "Garcia", "Hughes", "Ibrahim", "Jensen", "Kim", "Lopez", "Miller", "Nguyen", "Owens", "Patel", "Quinn", "Rossi", "Silva", "Turner"}
-	cities     = []string{"Austin", "Berlin", "Bristol", "Chicago", "Dublin", "Lisbon", "Melbourne", "Montreal", "Osaka", "Portland", "Seoul", "Stockholm", "Toronto", "Vienna", "Warsaw"}
-	countries  = []string{"Australia", "Austria", "Brazil", "Canada", "France", "Germany", "Ireland", "Italy", "Japan", "Netherlands", "Poland", "Portugal", "South Korea", "Sweden", "United Kingdom", "United States"}
-	categories = []string{"Audio", "Cameras", "Desks", "Displays", "Gaming", "Keyboards", "Lighting", "Mice", "Networking", "Printers", "Storage", "Webcams"}
+	cities     = []string{"Boston", "Hartford", "Providence", "New Haven", "Albany", "Burlington", "Portland", "Manchester", "Worcester", "Springfield", "Newark", "Buffalo"}
+	countries  = []string{"United States"}
+	categories = []string{"Generation", "Transmission", "Distribution", "Compression", "Metering", "Storage", "Maintenance", "Safety", "Billing", "SCADA", "Field Ops", "Compliance"}
 	statuses   = []string{"completed", "completed", "completed", "paid", "paid", "pending", "cancelled", "refunded"}
 	methods    = []string{"card", "card", "card", "bank_transfer", "paypal", "wallet"}
-	comments   = []string{"Works exactly as described.", "Great value for the price.", "Arrived quickly and well packed.", "Would buy again.", "Good, but the manual could be clearer.", "Solid build quality.", "Not what I expected.", "Decent for everyday use.", "Excellent quality.", "Replaced an older model and very happy.", ""}
+	comments   = []string{"Operates within spec.", "Reliable in cold weather.", "Installed on schedule.", "Meets safety standards.", "Documentation could be clearer.", "Solid build quality.", "Needs follow-up inspection.", "Decent for routine use.", "Excellent performance.", "Replaced aging unit successfully.", ""}
 )
 
 // Seed creates the demo database if it does not already exist.
@@ -164,7 +164,7 @@ func fill(db *sql.DB) error {
 	}
 	for i := 0; i < 30; i++ {
 		if err := exec(`INSERT INTO suppliers(id, name, country, email) VALUES(?, ?, ?, ?)`,
-			i+1, fmt.Sprintf("Supplier %02d", i+1), countries[rng.Intn(len(countries))],
+			i+1, fmt.Sprintf("GasGrid Supplier %02d", i+1), countries[rng.Intn(len(countries))],
 			fmt.Sprintf("supplier%02d@example.com", i+1)); err != nil {
 			return err
 		}
@@ -181,7 +181,7 @@ func fill(db *sql.DB) error {
 		created := now.Add(-time.Duration(30+rng.Intn(300)) * 24 * time.Hour).Format(time.RFC3339)
 		if err := exec(`INSERT INTO products(id, category_id, supplier_id, name, sku, price, stock, active, thumbnail, created_at)
 			VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			i, 1+rng.Intn(12), 1+rng.Intn(30), fmt.Sprintf("Product %03d", i),
+			i, 1+rng.Intn(12), 1+rng.Intn(30), fmt.Sprintf("Asset %03d", i),
 			fmt.Sprintf("SKU-%04d", i), price, rng.Intn(500), rng.Intn(6) != 0, thumb, created); err != nil {
 			return err
 		}
