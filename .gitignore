@@ -1,3 +1,37 @@
-build/bin
-frontend/dist
-frontend/node_modules
+# Build output
+build/
+dist/
+
+# Frontend
+frontend/dist/
+frontend/node_modules/
+frontend/.svelte-kit/
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+go.work.sum
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Wails
+frontend/wailsjs/go/
+frontend/wailsjs/runtime/

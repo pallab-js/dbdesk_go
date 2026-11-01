@@ -3,6 +3,7 @@
     Bookmark,
     Download,
     Eraser,
+    FileSearch,
     LoaderCircle,
     Play,
     Save,
@@ -13,7 +14,7 @@
   import { SQLite, sql } from '@codemirror/lang-sql'
   import { keymap } from '@codemirror/view'
   import { onMount } from 'svelte'
-  import { ExportLastResultCSV, RunQuery, SavedQueries, SaveQuery, DeleteSavedQuery } from '../../wailsjs/go/main/App.js'
+  import { ExportLastResultCSV, RunQuery, SavedQueries, SaveQuery, DeleteSavedQuery, ExplainQuery } from '../../wailsjs/go/main/App.js'
   import { model } from '../../wailsjs/go/models'
   import type { model as M } from '../../wailsjs/go/models'
   import DataGrid from '../components/DataGrid.svelte'
@@ -30,6 +31,7 @@
   let result: M.QueryResult | null = null
   let error = ''
   let running = false
+  let explaining = false
   let exporting = false
   let saved: M.SavedQuery[] = []
   let showSave = false
@@ -131,6 +133,7 @@
       return
     }
     running = true
+    explaining = false
     error = ''
     try {
       result = await RunQuery(text)
@@ -142,6 +145,25 @@
       error = errorText(e)
     } finally {
       running = false
+    }
+  }
+
+  async function explain() {
+    const text = currentSQL().trim()
+    if (!text) {
+      notify('Write a query first', 'error')
+      return
+    }
+    explaining = true
+    running = false
+    error = ''
+    try {
+      result = await ExplainQuery(text)
+    } catch (e) {
+      result = null
+      error = errorText(e)
+    } finally {
+      explaining = false
     }
   }
 
@@ -218,7 +240,11 @@
           <Download size={13} />
           Export
         </button>
-        <button class="btn sm primary" disabled={running} on:click={run}>
+        <button class="btn sm" disabled={running || explaining} on:click={explain} title="Run EXPLAIN QUERY PLAN for current selection">
+          {#if explaining}<LoaderCircle size={13} class="spin" />{:else}<FileSearch size={13} />{/if}
+          Explain
+        </button>
+        <button class="btn sm primary" disabled={running || explaining} on:click={run} title="Run query (Ctrl+Enter)">
           {#if running}<LoaderCircle size={13} class="spin" />{:else}<Play size={13} />{/if}
           Run
         </button>

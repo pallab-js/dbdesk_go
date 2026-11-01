@@ -327,7 +327,53 @@ func (a *App) RunQuery(sqlText string) (model.QueryResult, error) {
 		}
 		a.emit("db:changed")
 	}
-	return res, err
+	if err != nil {
+		return model.QueryResult{}, err
+	}
+	return res, nil
+}
+
+// ExplainQuery runs EXPLAIN QUERY PLAN for the given SQL.
+func (a *App) ExplainQuery(sqlText string) (model.QueryResult, error) {
+	a.mu.RLock()
+	defer a.mu.RUnlock()
+	if a.db == nil {
+		return model.QueryResult{}, errors.New("open a database first")
+	}
+	trimmed := strings.TrimSpace(sqlText)
+	if trimmed == "" {
+		return model.QueryResult{}, errors.New("write a query first")
+	}
+	stmt := trimmed
+	upper := strings.ToUpper(stmt)
+	if !strings.HasPrefix(upper, "EXPLAIN") {
+		stmt = "EXPLAIN QUERY PLAN " + stmt
+	}
+	ctx, cancel := context.WithTimeout(a.ctx, time.Duration(a.settings.TimeoutSeconds)*time.Second)
+	defer cancel()
+	res, err := a.db.Execute(ctx, stmt, a.settings.RowLimit, time.Duration(a.settings.TimeoutSeconds)*time.Second)
+
+	if a.settings.HistoryEnabled {
+		historySQL := stmt
+		if len(historySQL) > 10000 {
+			historySQL = historySQL[:10000] + "…"
+		}
+		errText := ""
+		if err != nil {
+			errText = err.Error()
+		}
+		connID := int64(0)
+		if a.conn != nil {
+			connID = a.conn.ID
+		}
+		if logErr := a.store.AddHistory(connID, historySQL, res.Kind, res.DurationMs, res.RowCount, err == nil, errText); logErr != nil {
+			a.logf("store query history: %v", logErr)
+		}
+	}
+	if err != nil {
+		return model.QueryResult{}, err
+	}
+	return res, nil
 }
 
 func (a *App) InsertRow(req model.RowInsertRequest) (model.MutationResult, error) {

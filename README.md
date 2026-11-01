@@ -1,97 +1,70 @@
 # DBDesk
 
-A local-first SQLite desktop client: browse tables, edit rows, run SQL, export CSV,
-and watch a dashboard built from your own query history and database stats.
+A local-first SQLite desktop client built with [Go](https://go.dev), [Wails v2](https://wails.io), and [Svelte 5](https://svelte.dev). Browse schemas, run SQL, edit rows, export CSV, and explore your database with a built-in dashboard.
 
-Everything runs on your machine. There is no account, no cloud service, and no
-telemetry that leaves the app.
+Everything runs on your machine — no accounts, no cloud services, no telemetry.
 
 ## Features
 
-- **Dashboard** — database size, table/row counts, column type mix, per-hour query
-  activity, p50/p95 latency, recent statements, and storage health.
-- **Data browser** — paginated table and view preview, column sorting, insert/update/
-  delete with primary-key or `rowid` targeting.
-- **SQL editor** — CodeMirror 6 with SQLite highlighting and completion, run the whole
-  buffer or just the selection, result grid, saved queries and CSV export.
-- **History** — every statement with duration, row count and error, filterable and
-  clearable.
-- **Settings** — theme (system/light/dark), row limit, timeout, history retention,
-  auto-refresh, recent databases, demo reset.
-- **Read-only mode** — enforced in the connection, pragmas and backend guards.
-- **Demo database** — deterministic 8-table e-commerce sample with a view.
+- **Dashboard** — Database size, table/view counts, row estimates, column type mix, query activity over time, p50/p95 latency, recent statements, and storage health.
+- **Data browser** — Paginated table and view preview with column sorting, insert/update/delete with primary-key or `rowid` targeting.
+- **SQL editor** — CodeMirror 6 with SQLite highlighting/completion, run selection or whole buffer, `EXPLAIN QUERY PLAN`, result grid, saved queries, and CSV export.
+- **History** — Every executed statement with duration, row count, status, and errors. Filterable and clearable.
+- **Settings** — Theme (system/light/dark), default row limit, query timeout, history retention, auto-refresh, recent databases, demo database management.
+- **Read-only mode** — Enforced at the UI, connection flags, and backend guards.
+- **Demo database** — Deterministic 8-table e-commerce sample with a view for quick exploration.
 
 ## Requirements
 
-- Go 1.24+ (developed with Go 1.26)
-- Node.js 22+ and npm
-- Wails v2.17+
-- Linux: GTK 3 and WebKitGTK 4.1 development packages
-  (`libgtk-3-dev`, `libwebkit2gtk-4.1-dev` on Debian/Ubuntu)
-- macOS: Xcode command line tools; Windows: WebView2 runtime
+- [Go](https://go.dev/dl/) 1.24+ (tested with 1.26)
+- [Node.js](https://nodejs.org/) 22+ and npm
+- [Wails CLI](https://wails.io/docs/gettingstarted/installation) v2.17+
+- **Linux**: `libgtk-3-dev` and `libwebkit2gtk-4.1-dev` (Ubuntu 24.04/26.04). On distros shipping WebKitGTK 4.0, adjust tags in `Makefile`.
+- **macOS**: Xcode Command Line Tools; **Windows**: WebView2 Runtime
 
-## Development
+## Getting Started
 
-```sh
+```bash
+# Install frontend deps
 npm install --prefix frontend
-make dev          # wails dev -tags webkit2_41
-```
 
-On distributions still shipping WebKitGTK 4.0, remove `-tags webkit2_41` from the
-Makefile (or run `wails dev` directly).
+# Run in development mode (Linux/Ubuntu 24.04+)
+make dev
+```
 
 ## Build
 
-```sh
-make build        # produces build/bin/dbdesk
-make test         # go test ./...
-make check        # svelte-check
+```bash
+make build   # produces build/bin/dbdesk
+make test    # go test ./...
+make check   # svelte-check
 ```
 
-`make install` copies the binary to `$PREFIX/bin` (default `/usr/local`), the
-launcher to `share/applications`, and the icon to `share/icons`. `make uninstall`
-removes them.
+## Install (Linux)
 
-## Where data lives
+```bash
+make install   # installs to /usr/local by default
+make uninstall
+```
 
-Linux (`$XDG_DATA_HOME` defaults to `~/.local/share`):
+## Data Location
 
-| Path | Contents |
-| --- | --- |
-| `~/.local/share/dbdesk/app.db` | app store: connections, history, saved queries, settings |
-| `~/.local/share/dbdesk/demo/ecommerce.db` | generated demo database |
-| `~/.local/share/dbdesk/logs/app.log` | app log |
+| Platform | Path | Contents |
+| --- | --- | --- |
+| Linux (`$XDG_DATA_HOME`, default `~/.local/share`) | `~/.local/share/dbdesk/` | `app.db` (settings/connections/history), `demo/`, `logs/` |
+| macOS | `~/Library/Application Support/dbdesk/` | Same structure |
+| Windows | `%APPDATA%\dbdesk\` | Same structure |
 
-macOS uses `~/Library/Application Support/dbdesk`, Windows uses
-`%APPDATA%\dbdesk`. Your databases are opened in place; DBDesk only writes to them
-when you edit rows or run a writing statement.
+Opened databases are accessed in-place; DBDesk only writes to them when you insert/update/delete or run write statements.
 
-## Safety model
+## Safety
 
-- One database connection at a time.
-- Read-only mode uses a read-only DSN plus `PRAGMA query_only=ON` plus a backend
-  statement guard.
-- Table and column identifiers are validated against the live schema and quoted;
-  row values are always bound as parameters.
-- The SQL editor runs exactly one statement per execution (selected text counts as
-  the whole statement).
-- Query results default to 1,000 rows (configurable up to 10,000) and 30 seconds
-  (configurable up to 120).
-- CSV cells beginning with `=`, `+`, `-` or `@` are prefixed to prevent spreadsheet
-  formula injection.
+- Parameterized queries where applicable; identifiers are validated against schema.
+- Read-only mode prevents writes.
+- Destructive actions (row delete/update) require confirmation in the UI.
+- CSV export escapes formula-leading characters to mitigate spreadsheet injection.
+- History can be cleared; retention is configurable.
 
-## Limits in this version
+## License
 
-- SQLite only, one connection at a time.
-- No schema designer, import, or multi-statement scripts.
-- BLOB columns are displayed summarised and are not editable.
-- Generated columns and views are read-only.
-
-## Documentation
-
-- [Solution design](docs/SDA.md)
-- [Product requirements](docs/PRD.md)
-- [Technical requirements](docs/TRD.md)
-- [Application flow](docs/APP_FLOW.md)
-- [UI and UX](docs/UI_UX.md)
-- [Implementation plan](docs/IMPLEMENTATION.md)
+[MIT](LICENSE)

@@ -26,6 +26,10 @@ export function DeleteSavedQuery(arg1) {
   return window['go']['main']['App']['DeleteSavedQuery'](arg1);
 }
 
+export function ExplainQuery(arg1) {
+  return window['go']['main']['App']['ExplainQuery'](arg1);
+}
+
 export function ExportLastResultCSV() {
   return window['go']['main']['App']['ExportLastResultCSV']();
 }

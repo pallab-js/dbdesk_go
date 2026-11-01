@@ -14,6 +14,8 @@ export function DeleteRow(arg1:model.RowDeleteRequest):Promise<model.MutationRes
 
 export function DeleteSavedQuery(arg1:number):Promise<void>;
 
+export function ExplainQuery(arg1:string):Promise<model.QueryResult>;
+
 export function ExportLastResultCSV():Promise<string>;
 
 export function ForgetConnection(arg1:number):Promise<void>;
