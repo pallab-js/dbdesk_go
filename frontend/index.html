@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta name="color-scheme" content="dark light"/>
+    <title>DBDesk</title>
+    <script>
+      // Apply the saved theme before the bundle loads to avoid a flash.
+      (function () {
+        try {
+          var mode = localStorage.getItem('dbdesk.theme') || 'system';
+          var dark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        } catch (e) {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      })();
+    </script>
+    <style>
+      html[data-theme='dark'] { background: #0b0f14; }
+      html[data-theme='light'] { background: #f6f8fa; }
+    </style>
+</head>
+<body>
+<div id="app"></div>
+<script src="./src/main.ts" type="module"></script>
+</body>
+</html>

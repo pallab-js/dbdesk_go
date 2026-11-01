@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=DBDesk
+GenericName=SQLite Browser
+Comment=Browse, edit and query local SQLite databases
+Exec=dbdesk
+Icon=dbdesk
+Terminal=false
+Categories=Development;Database;
+Keywords=sqlite;database;sql;browser;
+StartupNotify=true
+StartupWMClass=DBDesk
