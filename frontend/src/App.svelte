@@ -23,6 +23,8 @@
   import Data from './views/Data.svelte'
   import Editor from './views/Editor.svelte'
   import History from './views/History.svelte'
+  import Import from './views/Import.svelte'
+  import Maintenance from './views/Maintenance.svelte'
   import Settings from './views/Settings.svelte'
   import Welcome from './views/Welcome.svelte'
 
@@ -239,6 +241,10 @@
           <Editor {schema} rowLimit={state.settings.rowLimit} />
         {:else if $view === 'history'}
           <History />
+        {:else if $view === 'import'}
+          <Import {schema} />
+        {:else if $view === 'maintenance'}
+          <Maintenance connection={state.connection} />
         {:else}
           <Settings
             settings={state.settings}

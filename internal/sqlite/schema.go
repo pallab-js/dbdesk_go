@@ -196,3 +196,13 @@ func findRowID(ctx context.Context, db *sql.DB, table string) string {
 	}
 	return ""
 }
+
+// GetObjectDDL returns the DDL for a schema object.
+func (d *DB) GetObjectDDL(name string) (string, error) {
+	var ddl string
+	err := d.sql.QueryRow("SELECT sql FROM sqlite_master WHERE name = ?", name).Scan(&ddl)
+	if err != nil {
+		return "", err
+	}
+	return ddl, nil
+}

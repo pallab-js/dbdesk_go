@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store'
 
-export type View = 'dashboard' | 'data' | 'editor' | 'history' | 'settings'
+export type View = 'dashboard' | 'data' | 'editor' | 'history' | 'import' | 'maintenance' | 'settings'
 
 export type ToastKind = 'info' | 'success' | 'error'
 

@@ -1,13 +1,1 @@
-{
-  "$schema": "https://wails.io/schemas/config.v2.json",
-  "name": "dbdesk",
-  "outputfilename": "dbdesk",
-  "frontend:install": "npm install",
-  "frontend:build": "npm run build",
-  "frontend:dev:watcher": "npm run dev",
-  "frontend:dev:serverUrl": "auto",
-  "author": {
-    "name": "",
-    "email": ""
-  }
-}
+{"$schema":"https://wails.io/schemas/config.v2.json","name":"DBDesk","outputfilename":"dbdesk","frontend:install":"npm install","frontend:build":"npm run build","frontend:dev:watcher":"npm run dev","frontend:dev:serverUrl":"auto","author":{"name":"DBDesk","email":""},"info":{"productName":"DBDesk","productVersion":"0.2.0","copyright":"Copyright © 2024","comments":"Local-first SQLite desktop studio"}}

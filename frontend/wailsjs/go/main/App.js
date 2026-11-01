@@ -38,6 +38,10 @@ export function ForgetConnection(arg1) {
   return window['go']['main']['App']['ForgetConnection'](arg1);
 }
 
+export function GetPragmas() {
+  return window['go']['main']['App']['GetPragmas']();
+}
+
 export function GetSettings() {
   return window['go']['main']['App']['GetSettings']();
 }
@@ -46,8 +50,16 @@ export function GetState() {
   return window['go']['main']['App']['GetState']();
 }
 
+export function GetTableDDL(arg1) {
+  return window['go']['main']['App']['GetTableDDL'](arg1);
+}
+
 export function History(arg1) {
   return window['go']['main']['App']['History'](arg1);
+}
+
+export function ImportData(arg1) {
+  return window['go']['main']['App']['ImportData'](arg1);
 }
 
 export function InsertRow(arg1) {
@@ -78,6 +90,10 @@ export function ResetDemoDatabase() {
   return window['go']['main']['App']['ResetDemoDatabase']();
 }
 
+export function RunMaintenance(arg1) {
+  return window['go']['main']['App']['RunMaintenance'](arg1);
+}
+
 export function RunQuery(arg1) {
   return window['go']['main']['App']['RunQuery'](arg1);
 }
@@ -96,6 +112,10 @@ export function SavedQueries() {
 
 export function Schema() {
   return window['go']['main']['App']['Schema']();
+}
+
+export function SetPragma(arg1, arg2) {
+  return window['go']['main']['App']['SetPragma'](arg1, arg2);
 }
 
 export function UpdateRow(arg1) {

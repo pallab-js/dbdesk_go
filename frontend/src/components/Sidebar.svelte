@@ -1,12 +1,15 @@
 <script lang="ts">
   import {
+    Database,
     Eye,
+    FileUp,
     History,
     LayoutDashboard,
     Search,
     Settings,
     SquareTerminal,
     Table2,
+    Wrench,
   } from '@lucide/svelte'
   import type { model } from '../../wailsjs/go/models'
   import { activeTable, openTable, view } from '../lib/stores'
@@ -30,6 +33,8 @@
     { id: 'data', label: 'Data', icon: Table2 },
     { id: 'editor', label: 'SQL editor', icon: SquareTerminal },
     { id: 'history', label: 'History', icon: History },
+    { id: 'import', label: 'Import', icon: FileUp },
+    { id: 'maintenance', label: 'Maintenance', icon: Wrench },
     { id: 'settings', label: 'Settings', icon: Settings },
   ] as const
 </script>

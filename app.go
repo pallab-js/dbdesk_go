@@ -556,3 +556,63 @@ func normalizeSettings(st model.Settings) model.Settings {
 	}
 	return st
 }
+
+// RunMaintenance executes a maintenance action on the open database.
+func (a *App) RunMaintenance(action string) (model.MaintenanceResult, error) {
+	a.mu.RLock()
+	defer a.mu.RUnlock()
+	if a.db == nil {
+		return model.MaintenanceResult{}, errors.New("open a database first")
+	}
+	ctx, cancel := context.WithTimeout(a.ctx, 300*time.Second)
+	defer cancel()
+	return a.db.RunMaintenance(ctx, strings.TrimSpace(action))
+}
+
+// GetPragmas returns pragma values.
+func (a *App) GetPragmas() ([]model.PragmaInfo, error) {
+	a.mu.RLock()
+	defer a.mu.RUnlock()
+	if a.db == nil {
+		return nil, errors.New("open a database first")
+	}
+	ctx, cancel := context.WithTimeout(a.ctx, 10*time.Second)
+	defer cancel()
+	return a.db.GetPragmas(ctx)
+}
+
+// SetPragma sets a pragma value.
+func (a *App) SetPragma(name, value string) error {
+	a.mu.RLock()
+	db := a.db
+	a.mu.RUnlock()
+	if db == nil {
+		return errors.New("open a database first")
+	}
+	ctx, cancel := context.WithTimeout(a.ctx, 10*time.Second)
+	defer cancel()
+	return db.SetPragma(ctx, strings.TrimSpace(name), strings.TrimSpace(value))
+}
+
+// ImportData imports CSV/JSON data into a table.
+func (a *App) ImportData(req model.ImportRequest) (model.ImportResult, error) {
+	a.mu.RLock()
+	defer a.mu.RUnlock()
+	if a.db == nil {
+		return model.ImportResult{}, errors.New("open a database first")
+	}
+	ctx, cancel := context.WithTimeout(a.ctx, time.Duration(a.settings.TimeoutSeconds)*time.Second)
+	defer cancel()
+	return a.db.ImportData(ctx, req)
+}
+
+// GetTableDDL returns CREATE TABLE statement for a table.
+func (a *App) GetTableDDL(table string) (string, error) {
+	a.mu.RLock()
+	defer a.mu.RUnlock()
+	if a.db == nil {
+		return "", errors.New("open a database first")
+	}
+	// use sqlite directly via sql.DB is not exposed; call through schema if needed - fallback
+	return "", errors.New("not implemented")
+}

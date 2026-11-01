@@ -1,11 +1,10 @@
-# Build output
-build/
-dist/
+# Binaries
+/build/
+/dist/
+/frontend/dist/
 
-# Frontend
-frontend/dist/
-frontend/node_modules/
-frontend/.svelte-kit/
+# Dependencies
+node_modules/
 
 # Go
 *.exe
@@ -16,25 +15,22 @@ frontend/.svelte-kit/
 *.test
 *.out
 go.work
-go.work.sum
-
-# Editor / IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
 
 # OS
 .DS_Store
 Thumbs.db
 
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
 # Logs
 *.log
 
-# Graphify (generated knowledge graph outputs)
-graphify-out/
-
 # Wails
-frontend/wailsjs/go/
 frontend/wailsjs/runtime/
+
+# Generated
+graphify-out/

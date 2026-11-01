@@ -20,11 +20,17 @@ export function ExportLastResultCSV():Promise<string>;
 
 export function ForgetConnection(arg1:number):Promise<void>;
 
+export function GetPragmas():Promise<Array<model.PragmaInfo>>;
+
 export function GetSettings():Promise<model.Settings>;
 
 export function GetState():Promise<model.AppState>;
 
+export function GetTableDDL(arg1:string):Promise<string>;
+
 export function History(arg1:number):Promise<Array<model.HistoryEntry>>;
+
+export function ImportData(arg1:model.ImportRequest):Promise<model.ImportResult>;
 
 export function InsertRow(arg1:model.RowInsertRequest):Promise<model.MutationResult>;
 
@@ -40,6 +46,8 @@ export function RefreshSchema():Promise<model.Schema>;
 
 export function ResetDemoDatabase():Promise<model.ConnectionInfo>;
 
+export function RunMaintenance(arg1:string):Promise<model.MaintenanceResult>;
+
 export function RunQuery(arg1:string):Promise<model.QueryResult>;
 
 export function SaveQuery(arg1:string,arg2:string):Promise<model.SavedQuery>;
@@ -49,5 +57,7 @@ export function SaveSettings(arg1:model.Settings):Promise<model.Settings>;
 export function SavedQueries():Promise<Array<model.SavedQuery>>;
 
 export function Schema():Promise<model.Schema>;
+
+export function SetPragma(arg1:string,arg2:string):Promise<void>;
 
 export function UpdateRow(arg1:model.RowUpdateRequest):Promise<model.MutationResult>;

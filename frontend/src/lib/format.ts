@@ -60,3 +60,17 @@ export function sqlPreview(sql: string, max = 120): string {
   const line = sql.replace(/\s+/g, ' ').trim()
   return line.length > max ? line.slice(0, max) + '…' : line
 }
+
+export function formatSQL(sql: string): string {
+  // Basic SQL formatter
+  const keywords = ['SELECT', 'FROM', 'WHERE', 'JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'OUTER JOIN', 'ON', 'GROUP BY', 'ORDER BY', 'HAVING', 'LIMIT', 'OFFSET', 'INSERT INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE FROM', 'CREATE TABLE', 'ALTER TABLE', 'DROP TABLE', 'UNION', 'UNION ALL', 'AND', 'OR'];
+  let formatted = sql.replace(/\s+/g, ' ').trim();
+  // Add newlines before major keywords
+  formatted = formatted.replace(/\b(SELECT|FROM|WHERE|JOIN|LEFT JOIN|RIGHT JOIN|INNER JOIN|GROUP BY|ORDER BY|HAVING|LIMIT|INSERT INTO|UPDATE|DELETE FROM|UNION|UNION ALL)\b/gi, '\n$1');
+  // Add newlines for AND/OR in WHERE
+  formatted = formatted.replace(/\b(AND|OR)\b/gi, '\n  $1');
+  // Indent after SELECT
+  formatted = formatted.replace(/\nSELECT\s+/gi, '\nSELECT\n  ');
+  formatted = formatted.replace(/,\s*/g, ',\n  ');
+  return formatted.trim();
+}

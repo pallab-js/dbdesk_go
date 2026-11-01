@@ -17,8 +17,8 @@ const seed = 20261101
 var (
 	firstNames = []string{"Avery", "Jordan", "Riley", "Morgan", "Casey", "Quinn", "Rowan", "Sage", "Drew", "Emerson", "Finley", "Harper", "Jamie", "Kai", "Lane", "Marlow", "Noel", "Parker", "Reese", "Skyler"}
 	lastNames  = []string{"Adams", "Baker", "Chen", "Diaz", "Evans", "Fischer", "Garcia", "Hughes", "Ibrahim", "Jensen", "Kim", "Lopez", "Miller", "Nguyen", "Owens", "Patel", "Quinn", "Rossi", "Silva", "Turner"}
-	cities     = []string{"Boston", "Hartford", "Providence", "New Haven", "Albany", "Burlington", "Portland", "Manchester", "Worcester", "Springfield", "Newark", "Buffalo"}
-	countries  = []string{"United States"}
+	cities     = []string{"Guwahati", "Shillong", "Imphal", "Aizawl", "Agartala", "Kohima", "Itanagar", "Dibrugarh", "Silchar", "Jorhat", "Tinsukia", "Dimapur"}
+	countries  = []string{"India"}
 	categories = []string{"Generation", "Transmission", "Distribution", "Compression", "Metering", "Storage", "Maintenance", "Safety", "Billing", "SCADA", "Field Ops", "Compliance"}
 	statuses   = []string{"completed", "completed", "completed", "paid", "paid", "pending", "cancelled", "refunded"}
 	methods    = []string{"card", "card", "card", "bank_transfer", "paypal", "wallet"}
@@ -193,7 +193,7 @@ func fill(db *sql.DB) error {
 		if rng.Intn(20) != 0 {
 			city = cities[rng.Intn(len(cities))]
 		}
-		created := now.Add(-time.Duration(rng.Intn(400)) * 24 * time.Hour).Format(time.RFC3339)
+		created := now.Add(-time.Duration(rng.Intn(60)) * 24 * time.Hour).Format(time.RFC3339)
 		if err := exec(`INSERT INTO customers(id, name, email, city, country, created_at) VALUES(?, ?, ?, ?, ?, ?)`,
 			i, name, fmt.Sprintf("customer%04d@example.com", i), city,
 			countries[rng.Intn(len(countries))], created); err != nil {
@@ -206,7 +206,7 @@ func fill(db *sql.DB) error {
 	for i := 1; i <= 12000; i++ {
 		customerID := 1 + rng.Intn(2000)
 		status := statuses[rng.Intn(len(statuses))]
-		createdAt := now.Add(-time.Duration(rng.Intn(180*24)) * time.Hour)
+		createdAt := now.Add(-time.Duration(rng.Intn(30*24)) * time.Hour)
 		created := createdAt.Format(time.RFC3339)
 		if err := exec(`INSERT INTO orders(id, customer_id, status, total, created_at) VALUES(?, ?, ?, 0, ?)`,
 			i, customerID, status, created); err != nil {
@@ -242,7 +242,7 @@ func fill(db *sql.DB) error {
 		if c != "" {
 			comment = c
 		}
-		created := now.Add(-time.Duration(rng.Intn(180*24)) * time.Hour).Format(time.RFC3339)
+		created := now.Add(-time.Duration(rng.Intn(30*24)) * time.Hour).Format(time.RFC3339)
 		if err := exec(`INSERT INTO reviews(id, product_id, customer_id, rating, comment, created_at) VALUES(?, ?, ?, ?, ?, ?)`,
 			i, 1+rng.Intn(400), 1+rng.Intn(2000), 1+rng.Intn(5), comment, created); err != nil {
 			return err

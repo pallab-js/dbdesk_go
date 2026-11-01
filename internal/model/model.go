@@ -228,3 +228,39 @@ type DashboardData struct {
 	Recent      []HistoryEntry   `json:"recent"`
 	Partial     bool             `json:"partial"`
 }
+
+type MaintenanceAction struct {
+	Action string `json:"action"`
+}
+
+type MaintenanceResult struct {
+	Action  string `json:"action"`
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+	DurationMs int64 `json:"durationMs"`
+}
+
+type PragmaInfo struct {
+	Name  string `json:"name"`
+	Value string `json:"value"`
+}
+
+type PragmaSetRequest struct {
+	Name  string `json:"name"`
+	Value string `json:"value"`
+}
+
+type ImportRequest struct {
+	Table      string     `json:"table"`
+	Format     string     `json:"format"` // csv, json
+	Data       string     `json:"data"`
+	HasHeader  bool       `json:"hasHeader"`
+	Truncate   bool       `json:"truncate"`
+	ColumnMap  []KeyValue `json:"columnMap"`
+}
+
+type ImportResult struct {
+	Inserted int64  `json:"inserted"`
+	Errors   int    `json:"errors"`
+	Details  string `json:"details"`
+}

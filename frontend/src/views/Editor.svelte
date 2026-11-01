@@ -20,7 +20,7 @@
   import DataGrid from '../components/DataGrid.svelte'
   import EmptyState from '../components/EmptyState.svelte'
   import Modal from '../components/Modal.svelte'
-  import { errorText, formatDuration, formatNumber } from '../lib/format'
+  import { errorText, formatDuration, formatNumber, formatSQL } from '../lib/format'
   import { editorDraft, notify } from '../lib/stores'
 
   export let schema: M.Schema | null = null
@@ -231,6 +231,9 @@
         <button class="btn sm" on:click={clearEditor} title="Clear editor">
           <Eraser size={13} />
           Clear
+        </button>
+        <button class="btn sm" on:click={() => { if(view) { const sql = view.state.doc.toString(); view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: formatSQL(sql) } }); editorDraft.set(formatSQL(sql)); } }} title="Format SQL">
+          Format
         </button>
         <button class="btn sm" on:click={() => (showSave = true)} title="Save this query">
           <Save size={13} />

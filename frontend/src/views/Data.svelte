@@ -3,9 +3,11 @@
     ChevronLeft,
     ChevronRight,
     Download,
+    Filter,
     LoaderCircle,
     Plus,
     RefreshCw,
+    Search,
     TriangleAlert,
   } from '@lucide/svelte'
   import { DeleteRow, ExportLastResultCSV, PreviewTable } from '../../wailsjs/go/main/App.js'
