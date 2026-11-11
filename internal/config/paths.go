@@ -30,7 +30,7 @@ func Ensure() (Paths, error) {
 		DataDir:  dataDir,
 		DBPath:   filepath.Join(dataDir, "app.db"),
 		DemoDir:  filepath.Join(dataDir, "demo"),
-		DemoPath: filepath.Join(dataDir, "demo", "gasgrid.db"),
+		DemoPath: filepath.Join(dataDir, "demo", "stonecrusher.db"),
 		LogPath:  filepath.Join(dataDir, "logs", "app.log"),
 	}
 	if err := os.MkdirAll(p.DemoDir, 0o755); err != nil {

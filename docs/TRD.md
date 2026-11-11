@@ -178,7 +178,7 @@ Events: `db:changed` after open/close/demo/schema-affecting operations;
 
 ### 3.12 Demo database
 
-- Deterministic seed (fixed data, no randomness) at `<data>/demo/ecommerce.db`.
+- Deterministic seed (fixed data, no randomness) at `<data>/demo/stonecrusher.db`.
 - Eight tables (`categories`, `suppliers`, `products`, `customers`, `orders`,
   `order_items`, `payments`, `reviews`) and one view (`order_summary`).
 - Seed only when missing; reset deletes and recreates.

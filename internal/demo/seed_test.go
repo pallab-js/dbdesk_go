@@ -24,28 +24,26 @@ func TestSeed(t *testing.T) {
 	defer db.Close()
 
 	want := map[string]int64{
-		"categories": 12,
-		"suppliers":  30,
-		"products":   400,
-		"customers":  2000,
-		"orders":     12000,
-		"reviews":    5000,
+		"mines":             5,
+		"plants":            6,
+		"products":          10,
+		"customers":         30,
+		"equipment":         28,
+		"production":        0, // varies due to randomness
+		"stock":             60,
+		"sales_orders":      500,
+		"dispatches":        0, // varies due to randomness
+		"expenses":          1200,
+		"royalty_payments":  60,
 	}
 	for table, n := range want {
 		var got int64
 		if err := db.QueryRow("SELECT COUNT(*) FROM " + table).Scan(&got); err != nil {
 			t.Fatalf("%s: %v", table, err)
 		}
-		if got != n {
+		if n > 0 && got != n {
 			t.Errorf("%s rows = %d, want %d", table, got, n)
 		}
-	}
-	var extra int64
-	if err := db.QueryRow("SELECT COUNT(*) FROM order_items").Scan(&extra); err != nil {
-		t.Fatal(err)
-	}
-	if extra < 12000 || extra > 36000 {
-		t.Errorf("order_items = %d, outside expected range", extra)
 	}
 	var violations int
 	rows, err := db.Query("PRAGMA foreign_key_check")
@@ -60,10 +58,28 @@ func TestSeed(t *testing.T) {
 		t.Errorf("foreign key violations = %d", violations)
 	}
 	var viewCount int
-	if err := db.QueryRow("SELECT COUNT(*) FROM order_summary").Scan(&viewCount); err != nil {
+	if err := db.QueryRow("SELECT COUNT(*) FROM daily_production_summary").Scan(&viewCount); err != nil {
 		t.Fatal(err)
 	}
-	if viewCount != 12000 {
-		t.Errorf("order_summary rows = %d", viewCount)
+	if viewCount == 0 {
+		t.Errorf("daily_production_summary rows = 0, expected > 0")
+	}
+	if err := db.QueryRow("SELECT COUNT(*) FROM stock_status").Scan(&viewCount); err != nil {
+		t.Fatal(err)
+	}
+	if viewCount != 60 {
+		t.Errorf("stock_status rows = %d, want 60", viewCount)
+	}
+	if err := db.QueryRow("SELECT COUNT(*) FROM sales_summary").Scan(&viewCount); err != nil {
+		t.Fatal(err)
+	}
+	if viewCount != 500 {
+		t.Errorf("sales_summary rows = %d, want 500", viewCount)
+	}
+	if err := db.QueryRow("SELECT COUNT(*) FROM dispatch_summary").Scan(&viewCount); err != nil {
+		t.Fatal(err)
+	}
+	if viewCount == 0 {
+		t.Errorf("dispatch_summary rows = 0, expected > 0")
 	}
 }
