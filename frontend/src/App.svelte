@@ -7,10 +7,12 @@
     DashboardStats,
     ForgetConnection,
     GetState,
+    IsFullscreen,
     OpenDatabase,
     PickDatabaseFile,
     RefreshSchema,
     Schema,
+    ToggleFullscreen,
   } from '../wailsjs/go/main/App.js'
   import { EventsOn } from '../wailsjs/runtime/runtime.js'
   import { model } from '../wailsjs/go/models'
@@ -42,9 +44,19 @@
     void boot()
     const offDb = EventsOn('db:changed', () => void onDbChanged())
     const offSettings = EventsOn('settings:changed', () => void refreshState())
+    
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'F11') {
+        e.preventDefault()
+        void ToggleFullscreen()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    
     return () => {
       offDb()
       offSettings()
+      window.removeEventListener('keydown', handleKeyDown)
     }
   })
 

@@ -66,6 +66,10 @@ export function InsertRow(arg1) {
   return window['go']['main']['App']['InsertRow'](arg1);
 }
 
+export function IsFullscreen() {
+  return window['go']['main']['App']['IsFullscreen']();
+}
+
 export function OpenDatabase(arg1, arg2) {
   return window['go']['main']['App']['OpenDatabase'](arg1, arg2);
 }
@@ -116,6 +120,10 @@ export function Schema() {
 
 export function SetPragma(arg1, arg2) {
   return window['go']['main']['App']['SetPragma'](arg1, arg2);
+}
+
+export function ToggleFullscreen() {
+  return window['go']['main']['App']['ToggleFullscreen']();
 }
 
 export function UpdateRow(arg1) {

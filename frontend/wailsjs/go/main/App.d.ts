@@ -34,6 +34,8 @@ export function ImportData(arg1:model.ImportRequest):Promise<model.ImportResult>
 
 export function InsertRow(arg1:model.RowInsertRequest):Promise<model.MutationResult>;
 
+export function IsFullscreen():Promise<boolean>;
+
 export function OpenDatabase(arg1:string,arg2:boolean):Promise<model.ConnectionInfo>;
 
 export function PickDatabaseFile():Promise<string>;
@@ -59,5 +61,7 @@ export function SavedQueries():Promise<Array<model.SavedQuery>>;
 export function Schema():Promise<model.Schema>;
 
 export function SetPragma(arg1:string,arg2:string):Promise<void>;
+
+export function ToggleFullscreen():Promise<void>;
 
 export function UpdateRow(arg1:model.RowUpdateRequest):Promise<model.MutationResult>;

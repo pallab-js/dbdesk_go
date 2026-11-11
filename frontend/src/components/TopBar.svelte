@@ -1,7 +1,9 @@
 <script lang="ts">
-  import { Database, FolderOpen, Monitor, Moon, RotateCw, Sparkles, Sun, X } from '@lucide/svelte'
+  import { onMount } from 'svelte'
+  import { Database, Expand, FolderOpen, Monitor, Moon, RotateCw, Shrink, Sparkles, Sun, X } from '@lucide/svelte'
   import type { model } from '../../wailsjs/go/models'
   import { themeMode, cycleTheme } from '../lib/theme'
+  import * as App from '../../wailsjs/go/main/App'
 
   export let connection: model.ConnectionInfo | null = null
   export let refreshing = false
@@ -11,8 +13,31 @@
   export let onRefresh: () => void = () => {}
   export let onClose: () => void = () => {}
 
+  let isFullscreen = false
+
   $: themeIcon = $themeMode === 'light' ? Sun : $themeMode === 'dark' ? Moon : Monitor
   $: themeLabel = $themeMode === 'system' ? 'Theme: system' : $themeMode === 'light' ? 'Theme: light' : 'Theme: dark'
+  $: fullscreenIcon = isFullscreen ? Shrink : Expand
+  $: fullscreenLabel = isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'
+
+  async function checkFullscreen() {
+    try {
+      isFullscreen = await App.IsFullscreen()
+    } catch {
+      isFullscreen = false
+    }
+  }
+
+  async function toggleFullscreen() {
+    try {
+      await App.ToggleFullscreen()
+      isFullscreen = !isFullscreen
+    } catch (e) {
+      console.error('Failed to toggle fullscreen:', e)
+    }
+  }
+
+  onMount(checkFullscreen)
 </script>
 
 <header class="topbar">
@@ -39,6 +64,14 @@
   <div class="actions">
     <button class="btn ghost icon sm" title={themeLabel} aria-label={themeLabel} on:click={cycleTheme}>
       <svelte:component this={themeIcon} size={15} />
+    </button>
+    <button
+      class="btn ghost icon sm"
+      title={fullscreenLabel}
+      aria-label={fullscreenLabel}
+      on:click={toggleFullscreen}
+    >
+      <svelte:component this={fullscreenIcon} size={15} />
     </button>
     <button
       class="btn ghost icon sm"

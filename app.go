@@ -616,3 +616,24 @@ func (a *App) GetTableDDL(table string) (string, error) {
 	// use sqlite directly via sql.DB is not exposed; call through schema if needed - fallback
 	return "", errors.New("not implemented")
 }
+
+// ToggleFullscreen toggles the window fullscreen state.
+func (a *App) ToggleFullscreen() error {
+	if a.ctx == nil {
+		return errors.New("app not ready")
+	}
+	if runtime.WindowIsFullscreen(a.ctx) {
+		runtime.WindowUnfullscreen(a.ctx)
+	} else {
+		runtime.WindowFullscreen(a.ctx)
+	}
+	return nil
+}
+
+// IsFullscreen returns whether the window is currently fullscreen.
+func (a *App) IsFullscreen() (bool, error) {
+	if a.ctx == nil {
+		return false, errors.New("app not ready")
+	}
+	return runtime.WindowIsFullscreen(a.ctx), nil
+}
