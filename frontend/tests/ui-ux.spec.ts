@@ -107,15 +107,93 @@ test.describe('DBDesk UI/UX', () => {
     await expect(page.locator('main')).toBeVisible({ timeout: 20000 });
     
     await page.locator('.sidebar button:has-text("Editor")').click();
-    await expect(page.locator('.cm-editor').first()).toBeVisible({ timeout: 40000 });
+    // Editor takes time to load CodeMirror
+    await page.waitForTimeout(3000);
+    await expect(page.locator('.editor-host')).toBeVisible({ timeout: 40000 });
     
-    await page.locator('.cm-editor').first().click();
+    await page.locator('.editor-host').click();
     await page.waitForTimeout(500);
     await page.keyboard.type('SELECT * FROM mines LIMIT 5');
     await page.locator('button:has-text("Run")').click();
     
     // Should show results
     await expect(page.locator('text=mines').first()).toBeVisible({ timeout: 20000 });
+  });
+
+  test('editor runs multiple query types', async ({ page }) => {
+    test.setTimeout(90000);
+    const demoBtn = page.locator('.topbar button:has-text("Demo")').first();
+    await demoBtn.click();
+    await expect(page.locator('main')).toBeVisible({ timeout: 20000 });
+    
+    await page.locator('.sidebar button:has-text("Editor")').click();
+    await page.waitForTimeout(3000);
+    await expect(page.locator('.editor-host')).toBeVisible({ timeout: 40000 });
+    
+    // Helper to run a query and wait for results
+    async function runQuery(sql: string, expectResult: string | RegExp) {
+      // Clear editor first
+      await page.locator('button:has-text("Clear")').click();
+      await page.waitForTimeout(200);
+      await page.locator('.editor-host').click();
+      await page.waitForTimeout(200);
+      await page.keyboard.type(sql);
+      await page.locator('button:has-text("Run")').click();
+      await expect(page.locator('.result-panel')).toBeVisible({ timeout: 20000 });
+      await expect(page.locator('.grid-wrap')).toBeVisible({ timeout: 15000 });
+      await expect(page.locator('.grid-wrap')).toContainText(expectResult);
+    }
+    
+    // Helper to run EXPLAIN
+    async function runExplain(sql: string, expectResult: string | RegExp) {
+      await page.locator('button:has-text("Clear")').click();
+      await page.waitForTimeout(200);
+      await page.locator('.editor-host').click();
+      await page.waitForTimeout(200);
+      await page.keyboard.type(sql);
+      await page.locator('button:has-text("Explain")').click();
+      await expect(page.locator('.result-panel')).toBeVisible({ timeout: 20000 });
+      await expect(page.locator('.grid-wrap')).toBeVisible({ timeout: 15000 });
+      await expect(page.locator('.grid-wrap')).toContainText(expectResult);
+    }
+    
+    // Test 1: Simple SELECT
+    await runQuery('SELECT name, state FROM mines ORDER BY name LIMIT 3', 'Borgang');
+    await expect(page.locator('.grid-wrap')).toContainText('Dirang');
+    await expect(page.locator('.grid-wrap')).toContainText('Dhansiri');
+    
+    // Test 2: JOIN query
+    await runQuery(`
+      SELECT m.name as mine, p.name as plant, p.capacity_tph
+      FROM mines m
+      JOIN plants p ON p.mine_id = m.id
+      WHERE m.state = 'Assam'
+    `, 'Numaligarh');
+    await expect(page.locator('.grid-wrap')).toContainText('Borgang');
+    
+    // Test 3: Aggregate query
+    await runQuery(`
+      SELECT product_id, SUM(quantity_mt) as total_mt
+      FROM production
+      WHERE plant_id = 1
+      GROUP BY product_id
+      ORDER BY total_mt DESC
+      LIMIT 5
+    `, /total_mt/);
+    
+    // Test 4: View query (stock_status - may return no LOW rows)
+    await page.locator('button:has-text("Clear")').click();
+    await page.waitForTimeout(200);
+    await page.locator('.editor-host').click();
+    await page.waitForTimeout(200);
+    await page.keyboard.type('SELECT * FROM stock_status LIMIT 10');
+    await page.locator('button:has-text("Run")').click();
+    await expect(page.locator('.result-panel')).toBeVisible({ timeout: 20000 });
+    await expect(page.locator('.grid-wrap')).toBeVisible({ timeout: 15000 });
+    // Just verify it runs without error - could show data or "No rows"
+    
+    // Test 5: EXPLAIN QUERY PLAN
+    await runExplain('SELECT * FROM mines WHERE state = \'Assam\'', 'SCAN');
   });
 
   test('responsive layout on different viewport sizes', async ({ page }) => {
